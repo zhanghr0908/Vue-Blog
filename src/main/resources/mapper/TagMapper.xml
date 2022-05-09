@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ltj.blog.mapper.TagMapper">
+
+    <select id="selectHotTagsIdsByLimit" resultType="long">
+        select tag_id
+        from blog_tag
+        group by tag_id
+        order by count(*) desc limit #{limit}
+    </select>
+
+    <select id="selectHotTagsByHotTagsId" resultType="com.ltj.blog.entity.Tag">
+        select id,tag_name
+        from tag
+        where id in
+        <foreach collection="list" item="tagId" open="(" close=")" separator=",">
+            #{tagId}
+        </foreach>
+    </select>
+
+</mapper>

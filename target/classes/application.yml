@@ -1,0 +1,45 @@
+# DataSource Config
+server:
+  port: 8083
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/vueblog?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: 123456
+  redis:
+      host: localhost
+      port: 6379
+  mail:
+      host:  smtp.163.com
+      username: hrz0908@163.com
+      password: 1
+      default-encoding: UTF-8
+  rabbitmq:
+    username: root
+    password: root
+    host: 192.168.1.110 #这里要改的
+    port: 5672
+  data:
+    elasticsearch:
+      cluster-name: elasticsearch
+      # 9200作为Http协议，主要用于外部通讯，而9300作为Tcp协议，是传输层监听的默认端口，jar之间就是通过tcp协议通讯
+      cluster-nodes: localhost:9300
+      repositories:
+        enabled: true
+#shiro-redis:
+#  enabled: true
+#  redis-manager:
+#    host: localhost:6379
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**Mapper.xml
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+ltj:
+  jwt:
+    # 部署上线务必修改此配置，以保证token的安全性
+    # 加密密钥
+    secret: f4e2e52034348f86b67cde581c0f9eb5
+    # token有效时长 1天 单位秒
+    expire: 86400
+    header: token

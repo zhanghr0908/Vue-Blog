@@ -1,0 +1,28 @@
+{
+  "groups": [
+    {
+      "name": "ltj.jwt",
+      "type": "com.ltj.blog.common.util.JwtUtils",
+      "sourceType": "com.ltj.blog.common.util.JwtUtils"
+    }
+  ],
+  "properties": [
+    {
+      "name": "ltj.jwt.expire",
+      "type": "java.lang.Long",
+      "sourceType": "com.ltj.blog.common.util.JwtUtils",
+      "defaultValue": 0
+    },
+    {
+      "name": "ltj.jwt.header",
+      "type": "java.lang.String",
+      "sourceType": "com.ltj.blog.common.util.JwtUtils"
+    },
+    {
+      "name": "ltj.jwt.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.ltj.blog.common.util.JwtUtils"
+    }
+  ],
+  "hints": []
+}
