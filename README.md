@@ -66,14 +66,15 @@ markdown：
 - 访问统计
 - 初始数据
 
-##项目快速开始
+## 项目快速开始
+
 1. 执行console.sql创建数据库 
 2. 开启redis、rabbitmq、elasticsearch
 3. idea中修改yml配置，然后运行后端项目
 4. 安装npm 在idea中启动前端页面
 
+## 项目线上部署
 
-##项目线上部署
 1. 使用docker-compose来编排 
 2. 需要nginx、redis、rabbitmq、elasticsearch、后端项目、mysql
 3. nginx反向代理，将https请求通过http转给后端容器，避免接口暴露和http的不安全性
