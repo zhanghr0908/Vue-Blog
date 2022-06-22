@@ -20,4 +20,9 @@ public interface CommentService extends IService<Comment> {
      * 通过博客id和父评论id查找所有子评论
      */
     List<PageCommentVo> getPageCommentList(Long blogId, Long parentCommentId);
+
+    /**
+     * 获取评论数
+     */
+    Double getCommentCount(Long blogId);
 }

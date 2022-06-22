@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/vueblog?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/vueblog?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: root
     password: 123456
   redis:
@@ -13,7 +13,7 @@ spring:
   mail:
       host:  smtp.163.com
       username: hrz0908@163.com
-      password: 1
+      password: AKBIFHGMXOGKDOXV #这里不是密码，是开启POP3/SMTP服务的密钥
       default-encoding: UTF-8
   rabbitmq:
     username: root
@@ -27,6 +27,9 @@ spring:
       cluster-nodes: localhost:9300
       repositories:
         enabled: true
+mail:
+  fromMail:
+    addr: hrz0908@163.com
 #shiro-redis:
 #  enabled: true
 #  redis-manager:

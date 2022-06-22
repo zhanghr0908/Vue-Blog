@@ -21,6 +21,8 @@ public interface RedisService {
 
 	void zIncrementScore(String key, Object value, double delta);
 
+	void deleteMemberFromZSet(String key, Object member, Object score);
+
 	/**
 	 * 通过key从set中删除一个值（对象）
 	 */

@@ -2,7 +2,6 @@ package com.ltj.blog.service.impl;
 
 
 import com.ltj.blog.service.RedisService;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -67,6 +66,10 @@ public class RedisServiceImpl implements RedisService {
 		jsonRedisTemplate.opsForZSet().incrementScore(key, value, delta);
 	}
 
+	@Override
+	public void deleteMemberFromZSet(String key, Object member, Object score) {
+		jsonRedisTemplate.opsForZSet().remove(key, member, score);
+	}
 
 	/**
 	 * 通过key从set中删除一个值（对象）

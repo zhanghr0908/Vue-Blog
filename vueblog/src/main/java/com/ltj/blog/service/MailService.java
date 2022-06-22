@@ -20,6 +20,12 @@ public interface MailService {
      */
     void sendHtmlMail(String toAccount, String subject, String content);
 
-
+    /**
+     * 测试发邮件功能
+     * @param to
+     * @param subject
+     * @param content
+     */
+    void sendMailTest(String to, String subject, String content);
 }
 

@@ -40,6 +40,7 @@ com\ltj\blog\common\constant\RedisKeyConfig.class
 com\ltj\blog\mapper\BlogMapper.class
 com\ltj\blog\controller\VisitLogController.class
 com\ltj\blog\service\RedisService.class
+com\ltj\blog\common\util\MyBloomFilter$SimpleHash.class
 com\ltj\blog\common\config\RabbitMQConfig.class
 com\ltj\blog\service\impl\CommentServiceImpl.class
 com\ltj\blog\schedule\RedisSyncScheduleTask.class
@@ -68,6 +69,7 @@ com\ltj\blog\common\annotation\VisitLogger.class
 com\ltj\blog\service\impl\VisitLogServiceImpl.class
 com\ltj\blog\controller\FriendController.class
 com\ltj\blog\mq\MQMessageHandler.class
+com\ltj\blog\common\util\MyBloomFilter.class
 com\ltj\blog\controller\TagController.class
 com\ltj\blog\entity\Comment.class
 com\ltj\blog\shiro\AccountRealm.class

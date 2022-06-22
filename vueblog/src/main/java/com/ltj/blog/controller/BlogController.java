@@ -2,6 +2,9 @@ package com.ltj.blog.controller;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -12,6 +15,7 @@ import com.ltj.blog.common.vo.Result;
 import com.ltj.blog.entity.Blog;
 import com.ltj.blog.mq.BlogMQIndexMessage;
 import com.ltj.blog.service.BlogService;
+import com.ltj.blog.service.CommentService;
 import com.ltj.blog.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -24,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -38,6 +43,8 @@ public class BlogController {
     private RedisService redisService;
     @Autowired
     private AmqpTemplate amqpTemplate;
+    @Autowired
+    private CommentService commentService;
 
     /**
      * 后台 - 写文章， 创建博客
@@ -67,6 +74,10 @@ public class BlogController {
             redisService.deleteCacheByKey(RedisKeyConfig.BLOG_INFO_CACHE);
             redisService.deleteCacheByKey(RedisKeyConfig.ARCHIVE_INFO_CACHE);
             redisService.deleteCacheByKey(RedisKeyConfig.CATEGORY_BLOG_CACHE);
+
+            // 更新一下本周热议
+            blogService.queryWeekHotBlogByLimit(3);
+
         }
         return Result.succ(null);
     }
@@ -99,7 +110,7 @@ public class BlogController {
     @RequiresAuthentication
     @RequiresPermissions("user:update")
     @RequestMapping("blog/publish/{id}")
-    public Result updateBlogViewStatusById(@PathVariable(name = "id")String id){
+    public Result updateBlogViewStatusById(@PathVariable(name = "id")Long id){
         Blog blog = blogService.getById(id);
 //        blog.setStatus(blog.getStatus() == 0 ? 1 : 0);
         if (blog.getStatus() == 0) {
@@ -112,6 +123,14 @@ public class BlogController {
             // 通知mq删除一条数据
             amqpTemplate.convertAndSend(RabbitMQConfig.ES_EXCHANGE, RabbitMQConfig.ES_BINDING_KEY,
                     new BlogMQIndexMessage(blog.getId(), BlogMQIndexMessage.DELETE));
+
+            // 本周热议中如果有要删掉
+            if (redisService.hasKey("rankBlog:" + id)) {
+                redisService.deleteByHashKey("rankBlog:" + id, "blogId:", "blogTitle:");
+            }
+
+            String key = "dayRank:" + DateUtil.format(blog.getCreateTime(), DatePattern.PURE_DATE_PATTERN);
+            redisService.deleteMemberFromZSet(key, id, commentService.getCommentCount(id));
         }
         blogService.saveOrUpdate(blog);
 
@@ -119,6 +138,10 @@ public class BlogController {
         redisService.deleteCacheByKey(RedisKeyConfig.BLOG_INFO_CACHE);
         redisService.deleteCacheByKey(RedisKeyConfig.ARCHIVE_INFO_CACHE);
         redisService.deleteCacheByKey(RedisKeyConfig.CATEGORY_BLOG_CACHE);
+
+        // 更新一下本周热议
+        blogService.queryWeekHotBlogByLimit(3);
+
         return Result.succ(null);
     }
 
@@ -163,6 +186,15 @@ public class BlogController {
         redisService.deleteCacheByKey(RedisKeyConfig.BLOG_INFO_CACHE);
         redisService.deleteCacheByKey(RedisKeyConfig.ARCHIVE_INFO_CACHE);
         redisService.deleteCacheByKey(RedisKeyConfig.CATEGORY_BLOG_CACHE);
+
+        // 本周热议中如果有要删掉,这里是为了防止更改标题之后本周热议中并没有对应修改，出现数据不一致问题
+        if (redisService.hasKey("rankBlog:" + blog.getId())) {
+            redisService.deleteByHashKey("rankBlog:" + blog.getId(), "blogId:", "blogTitle:");
+        }
+
+        // 更新一下本周热议
+        blogService.queryWeekHotBlogByLimit(3);
+
         return Result.succ(null);
     }
 
@@ -174,6 +206,10 @@ public class BlogController {
     @RequiresPermissions("user:delete")
     @GetMapping("/blog/delete/{id}")
     public Result deleteBlogById(@PathVariable(name = "id") Long id) {
+        Blog blog = blogService.getById(id);
+        String key = "dayRank:" + DateUtil.format(blog.getCreateTime(), DatePattern.PURE_DATE_PATTERN);
+        redisService.deleteMemberFromZSet(key, id, commentService.getCommentCount(id));
+
         if (blogService.removeById(id)) {
             // 删除缓存，保证redis缓存更新一致性的解决方法
             redisService.deleteCacheByKey(RedisKeyConfig.BLOG_INFO_CACHE);
@@ -184,6 +220,9 @@ public class BlogController {
             if (redisService.hasKey("rankBlog:" + id)) {
                 redisService.deleteByHashKey("rankBlog:" + id, "blogId:", "blogTitle:");
             }
+
+            // 更新一下本周热议
+            blogService.queryWeekHotBlogByLimit(3);
 
             // 通知mq删除一条数据
             amqpTemplate.convertAndSend(RabbitMQConfig.ES_EXCHANGE, RabbitMQConfig.ES_BINDING_KEY,

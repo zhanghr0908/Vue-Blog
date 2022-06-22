@@ -84,6 +84,7 @@ E:\JAVA\exercise\13blog-pro\vueblog\src\main\java\com\ltj\blog\mapper\FriendMapp
 E:\JAVA\exercise\13blog-pro\vueblog\src\main\java\com\ltj\blog\shiro\JwtFilter.java
 E:\JAVA\exercise\13blog-pro\vueblog\src\main\java\com\ltj\blog\controller\TypeController.java
 E:\JAVA\exercise\13blog-pro\vueblog\src\main\java\com\ltj\blog\controller\TagController.java
+E:\JAVA\exercise\13blog-pro\vueblog\src\main\java\com\ltj\blog\common\util\MyBloomFilter.java
 E:\JAVA\exercise\13blog-pro\vueblog\src\main\java\com\ltj\blog\common\config\ThreadPoolConfig.java
 E:\JAVA\exercise\13blog-pro\vueblog\src\main\java\com\ltj\blog\service\TagService.java
 E:\JAVA\exercise\13blog-pro\vueblog\src\main\java\com\ltj\blog\es\BlogDocumentService.java

@@ -34,4 +34,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         return commentMapper.getPageCommentListByPageAndParentCommentId(blogId, parentCommentId);
     }
 
+    @Override
+    public Double getCommentCount(Long blogId) {
+        return commentMapper.queryCountNum(blogId);
+    }
+
 }

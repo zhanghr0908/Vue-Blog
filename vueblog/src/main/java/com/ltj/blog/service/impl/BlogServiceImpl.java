@@ -62,7 +62,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
     @Override
     public List<Map<String, Object>> queryWeekHotBlogByLimit(int limit) {
         // 七天内发表的博客
-        List<Blog> blogList = blogMapper.selectList(new QueryWrapper<Blog>().ge("create_time", DateUtil.lastWeek().toJdkDate()));
+        List<Blog> blogList = blogMapper.selectList(new QueryWrapper<Blog>().ge("create_time", DateUtil.lastWeek().toJdkDate()).eq("status", 1));
         for(Blog blog : blogList) {
             String key = "dayRank:" + DateUtil.format(blog.getCreateTime(), DatePattern.PURE_DATE_PATTERN);
 //            System.out.println("key========" + key);
@@ -77,7 +77,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
             // 缓存博客基本信息
             hashCacheBlogIdAndTitle(blog, expireTime);
         }
-        // 统计七天的博客集合交集
+        // 统计七天的博客集合并集
         zUnionAndStoreLastWeekForWeekRank();
         // 取出前limit条
         return redisService.getWeekHotBlogByLimit(limit);
@@ -94,7 +94,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog> implements Bl
         }
     }
 
-    // 统计七天的博客集合交集
+    // 统计七天的博客集合并集
     public void zUnionAndStoreLastWeekForWeekRank() {
         List<String> keys = new ArrayList<>();
         String currentKey = "dayRank:" + DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);

@@ -161,7 +161,7 @@ public class VisitLogAspect {
         String identification = request.getHeader("identification");
         if (identification == null) {
             //第一次访问，签发uuid并保存到数据库和Redis
-            identification =   UUIDUtil.getUUID();
+            identification = UUIDUtil.getUUID();
             saveUUID(identification,request);
         } else {
             //校验Redis中是否存在uuid
@@ -174,24 +174,24 @@ public class VisitLogAspect {
                     //数据库存在，保存至Redis
                     redisService.saveValueToSet("identificationSet", identification);
                     //更新最后访问时间和pv
-                    updateVistor(identification);
+                    updateVisitor(identification);
                 } else {
-                    //数据库不存在，签发新的uuid
-                    identification =   UUIDUtil.getUUID();
+                    //数据库不存在，签发新的uuid，这里借用了解决缓存穿透的思想
+                    identification = UUIDUtil.getUUID();
                     //异步保存
                     saveUUID(identification,request);
                 }
             }
             else{
                 //更新最后时间和pv
-                updateVistor(identification);
+                updateVisitor(identification);
             }
         }
         return identification;
     }
 
     @Async
-    void updateVistor(String identification) {
+    void updateVisitor(String identification) {
         //更新最后访问时间和pv
         Visitor visitor = visitorService.getVisitorByUuid(identification);
         visitor.setPv(visitor.getPv()+1);
