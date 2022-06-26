@@ -74,7 +74,7 @@ markdown：
 
 **登录逻辑**，如下图
 
-![登录逻辑]([Vue-Blog/img/img/登录逻辑.jpg](https://github.com/zhanghr0908/Vue-Blog/blob/main/img/%E7%99%BB%E5%BD%95%E9%80%BB%E8%BE%91.jpg))
+![登录逻辑](https://github.com/zhanghr0908/Vue-Blog/blob/main/img/%E7%99%BB%E5%BD%95%E9%80%BB%E8%BE%91.jpg)
 
 - **Token和cookie+session的区别**
 
